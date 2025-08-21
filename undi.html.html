@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Undian WhatsApp</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #128C7E 0%, #25D366 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            margin: 20px 0;
+        }
+        
+        header {
+            background: linear-gradient(to right, #075E54, #128C7E);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .logo {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .card {
+            background-color: #ece5dd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            color: #075E54;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #075E54;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        button {
+            background: linear-gradient(to right, #25D366, #128C7E);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            opacity: 0.9;
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #25D366;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 10px;
+            }
+            
+            header {
+                padding: 20px 15px;
+            }
+            
+            header h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🎉</div>
+            <h1>FORMULIR UNDIAN GRUP WHATSAPP</h1>
+            <p>Dapatkan kesempatan memenangkan hadiah!</p>
+        </header>
+        
+        <div class="content">
+            <!-- Section Daftar -->
+            <div id="register">
+                <div class="card">
+                    <h2>Daftar Sekarang!</h2>
+                    <p>Isi formulir berikut untuk berpartisipasi dalam undian grup WhatsApp kami.</p>
+                </div>
+                
+                <form id="registrationForm">
+                    <div class="form-group">
+                        <label for="phone">Nomor WhatsApp:</label>
+                        <input type="text" id="phone" required placeholder="Contoh: 081234567890">
+                    </div>
+                    <div class="form-group">
+                        <label for="gameId">ID Akun Game HGI:</label>
+                        <input type="text" id="gameId" required placeholder="Masukkan ID Akun Game HGI Anda">
+                    </div>
+                    <button type="submit" id="registerBtn">Daftar Sekarang</button>
+                </form>
+                
+                <div id="registerMessage" class="message"></div>
+            </div>
+        </div>
+    </div>
+    
+    <footer style="text-align: center; margin-top: 30px; color: white; font-size: 14px; width: 100%; max-width: 600px;">
+        <p>© 2023 Formulir Undian Grup WhatsApp. Hak Cipta Dilindungi.</p>
+    </footer>
+
+    <script>
+        // URL Google Apps Script (GANTI DENGAN URL ANDA SENDIRI)
+        const scriptURL = 'https://script.google.com/macros/s/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/exec';
+        
+        // Elemen UI
+        const registerBtn = document.getElementById('registerBtn');
+        
+        // Fungsi untuk menampilkan pesan
+        function showMessage(elementId, type, message) {
+            const messageElement = document.getElementById(elementId);
+            messageElement.textContent = message;
+            messageElement.className = `message ${type}`;
+            messageElement.style.display = 'block';
+            
+            // Sembunyikan pesan setelah 5 detik
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Fungsi bantuan untuk validasi nomor telepon
+        function isValidPhone(phone) {
+            const phoneRegex = /^[0-9]{10,15}$/;
+            return phoneRegex.test(phone);
+        }
+        
+        // Form pendaftaran
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const phone = document.getElementById('phone').value.trim();
+            const gameId = document.getElementById('gameId').value.trim();
+            
+            // Validasi nomor WhatsApp
+            if (!isValidPhone(phone)) {
+                showMessage('registerMessage', 'error', 'Nomor WhatsApp tidak valid. Gunakan format angka yang benar (10-15 digit).');
+                return;
+            }
+            
+            // Validasi ID Game tidak kosong
+            if (!gameId) {
+                showMessage('registerMessage', 'error', 'ID Akun Game HGI harus diisi.');
+                return;
+            }
+            
+            registerBtn.disabled = true;
+            registerBtn.textContent = "Mendaftarkan...";
+            
+            // Kirim data ke Google Sheets via Google Apps Script
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    phone: phone,
+                    gameId: gameId,
+                    timestamp: new Date().toISOString()
+                })
+            })
+            .then(() => {
+                showMessage('registerMessage', 'success', 'Pendaftaran berhasil! Data Anda telah tercatat.');
+                document.getElementById('registrationForm').reset();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('registerMessage', 'error', 'Terjadi kesalahan. Silakan coba lagi.');
+            })
+            .finally(() => {
+                registerBtn.disabled = false;
+                registerBtn.textContent = "Daftar Sekarang";
+            });
+        });
+    </script>
+</body>
+</html>
